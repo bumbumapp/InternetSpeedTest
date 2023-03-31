@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.code.bumbumapps.netspeed">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/app_logo_foreground"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/app_logo_round"
+        android:supportsRtl="true"
+        android:theme="@style/sflash">
+        <activity
+            android:name="com.code.bumbumapps.netspeed.ServersActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.code.bumbumapps.netspeed.History"
+            android:label="History"
+            android:theme="@style/sflashgreenex">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.code.bumbumapps.netspeed.History" />
+        </activity>
+        <activity android:name="com.code.bumbumapps.netspeed.MainActivity" />
+        <activity
+            android:name="com.code.bumbumapps.netspeed.flash_sceen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8444865753152507~7131107606" />
+    </application>
+
+</manifest>
