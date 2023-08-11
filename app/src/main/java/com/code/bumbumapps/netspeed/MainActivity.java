@@ -41,6 +41,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.jtv7.rippleswitchlib.RippleSwitch;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
         setContentView(R.layout.main_speed_layout);
 
         serversPreference=new ServersPreference(this);
-
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -967,4 +968,3 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
 
 
 }
-

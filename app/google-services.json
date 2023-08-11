@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "759978893696",
+    "project_id": "internet-speed-test-8e0db",
+    "storage_bucket": "internet-speed-test-8e0db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759978893696:android:95d89473427818bf55e165",
+        "android_client_info": {
+          "package_name": "com.bumbumapps.internetspeedtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759978893696-kfvceu7c7m169acbb2khl1nkc3hsl55q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDHlGDDz_8qznm22lmU9FYqXchTyQAnMU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759978893696-kfvceu7c7m169acbb2khl1nkc3hsl55q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

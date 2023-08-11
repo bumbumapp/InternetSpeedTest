@@ -28,7 +28,8 @@
         </activity>
         <activity android:name="com.code.bumbumapps.netspeed.MainActivity" />
         <activity
-            android:name="com.code.bumbumapps.netspeed.flash_sceen">
+            android:name="com.code.bumbumapps.netspeed.flash_sceen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +46,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="true" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-8444865753152507~7131107606" />

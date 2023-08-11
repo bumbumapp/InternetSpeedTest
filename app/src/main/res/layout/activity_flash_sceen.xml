@@ -7,13 +7,21 @@
     android:layout_height="match_parent"
     tools:context=".flash_sceen">
 
-
-    <ImageView
+    <androidx.cardview.widget.CardView
         android:layout_centerInParent="true"
-        android:id="@+id/imageview"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_200sdp"
-        android:src="@mipmap/app_logo_foreground"/>
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="@dimen/_130sdp">
+        <ImageView
+            android:id="@+id/imageview"
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_130sdp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/app_logo_round"/>
+    </androidx.cardview.widget.CardView>
+
+
 
 
 
