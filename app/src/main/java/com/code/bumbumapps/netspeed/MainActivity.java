@@ -11,6 +11,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -24,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -34,13 +37,17 @@ import com.code.bumbumapps.netspeed.Speed.DevilDownloadTest;
 import com.code.bumbumapps.netspeed.Speed.HttpUploadTest;
 import com.code.bumbumapps.netspeed.Speed.PingTest;
 import com.code.bumbumapps.netspeed.schreenshot.ScreenshotUtil;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -90,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
     Handler handler=new Handler();
     Runnable runnable;
     int findServerIndex = 0;
+    AdRequest adRequest;
 
     Handler handlerd=new Handler();
     @Override
@@ -114,14 +122,12 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
         });
         /**setup banner ads*/
         mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
         /**setup banner ads*/
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-8444865753152507/4273273307");//set your 1st Interstitial Ads IDE
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-//
 
+//
+      loadIntersitialAds();
 
 
         /**startButton*/
@@ -314,6 +320,21 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
 
             }
         });
+    }
+
+    private void loadIntersitialAds() {
+        InterstitialAd.load(this, "ca-app-pub-8444865753152507/4273273307", adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                mInterstitialAd = interstitialAd;
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                mInterstitialAd =null;
+            }
+        });
+
     }
 
     public void mainrun(){
@@ -686,39 +707,24 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
                             mhead.setText(R.string.app_name);
                         } catch (Exception O) {
                         }
-                        if (mInterstitialAd.isLoaded()) {
-                            mInterstitialAd.show();
-                            mInterstitialAd.setAdListener(new AdListener() {
+                        if (mInterstitialAd != null) {
+                            mInterstitialAd.show(MainActivity.this);
+                            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                                 @Override
-                                public void onAdLoaded() {
-
-                                }
-
-                                @Override
-                                public void onAdFailedToLoad(int errorCode) {
-                                    sharing();
-                                    mInterstitialAd.loadAd(new AdRequest.Builder().build());
-                                }
-
-                                @Override
-                                public void onAdOpened() {
-                                    TastyToast.makeText(getApplicationContext(), "Executed when the ad is closed", TastyToast.LENGTH_LONG, TastyToast.INFO);
+                                public void onAdDismissedFullScreenContent() {
+                                   sharing();
+                                   loadIntersitialAds();
                                 }
 
                                 @Override
                                 public void onAdClicked() {
-                                    // Code to be executed when the user clicks on an ad.
-                                }
-
-                                @Override
-                                public void onAdLeftApplication() {
                                     TastyToast.makeText(getApplicationContext(), "Executed when the ad is closed", TastyToast.LENGTH_LONG, TastyToast.INFO);
+
                                 }
 
                                 @Override
-                                public void onAdClosed() {
-                                    sharing();
-                                    mInterstitialAd.loadAd(new AdRequest.Builder().build());
+                                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                                    loadIntersitialAds();
                                 }
                             });
                         } else {
@@ -913,11 +919,20 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
     }
     public void reqastpermisson(){
         /**get storage permisson*/
-        TedPermission.with(this)
-                .setPermissionListener(permissionlistener)
-                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .check();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            TedPermission.with(this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                    .setPermissions(Manifest.permission.READ_MEDIA_IMAGES)
+                    .check();
+
+        }else{
+            TedPermission.with(this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                    .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .check();
+        }
 
         /**get storage permisson*/
     }
