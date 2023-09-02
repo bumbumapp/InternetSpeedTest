@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
     }
 
     private void loadIntersitialAds() {
-        InterstitialAd.load(this, "ca-app-pub-8444865753152507/4273273307", adRequest, new InterstitialAdLoadCallback() {
+        InterstitialAd.load(this, getString(R.string.interstial_id), adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                 mInterstitialAd = interstitialAd;
