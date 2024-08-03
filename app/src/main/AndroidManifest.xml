@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.code.bumbumapps.netspeed">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -18,18 +19,25 @@
         android:theme="@style/sflash">
         <activity
             android:name="com.code.bumbumapps.netspeed.ServersActivity"
+            tools:node="merge"
             android:exported="false" />
         <activity
             android:name="com.code.bumbumapps.netspeed.History"
             android:label="History"
+            android:exported="true"
+            tools:node="merge"
             android:theme="@style/sflashgreenex">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.code.bumbumapps.netspeed.History" />
         </activity>
-        <activity android:name="com.code.bumbumapps.netspeed.MainActivity" />
+        <activity
+            android:exported="true"
+            tools:node="merge"
+            android:name="com.code.bumbumapps.netspeed.MainActivity" />
         <activity
             android:name="com.code.bumbumapps.netspeed.flash_sceen"
+            tools:node="merge"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,6 +61,7 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/app_id" />
+
     </application>
 
 </manifest>
