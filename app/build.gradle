@@ -1,63 +1,75 @@
 apply plugin: 'com.android.application'
-apply plugin:  'com.google.gms.google-services'
-apply plugin:  'com.google.firebase.crashlytics'
-android {
-    compileSdkVersion 34
-    buildToolsVersion '30.0.3'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
-    lintOptions {
+android {
+    namespace 'com.code.bumbumapps.netspeed'
+    compileSdk 36
+
+    lint {
         disable 'InvalidPackage'
+        abortOnError false
         checkReleaseBuilds false
     }
 
     defaultConfig {
         applicationId "com.bumbumapps.internetspeedtest"
-        minSdkVersion 19
-        targetSdkVersion 34
-        versionCode 6
-        versionName "1.0.5"
+        minSdk 24
+        targetSdk 36
+        versionCode 9
+        versionName "1.1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        buildConfig true
+        resValues true
+    }
+
     buildTypes {
+        debug {
+            // Google's public test IDs so debug builds never request real ads.
+            resValue 'string', 'app_id', 'ca-app-pub-3940256099942544~3347511713'
+            resValue 'string', 'banner_id', 'ca-app-pub-3940256099942544/9214589741'
+            resValue 'string', 'interstial_id', 'ca-app-pub-3940256099942544/1033173712'
+        }
         release {
+            // Real AdMob IDs (AdMob app for com.bumbumapps.internetspeedtest, from the AdMob API).
+            resValue 'string', 'app_id', 'ca-app-pub-8444865753152507~7131107606'
+            resValue 'string', 'banner_id', 'ca-app-pub-8444865753152507/3762708230'
+            resValue 'string', 'interstial_id', 'ca-app-pub-8444865753152507/4273273307'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation files('libs/achartengine-1.2.0.jar')
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.activity:activity:1.10.1'
+    implementation 'androidx.core:core:1.17.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+    implementation 'com.google.android.material:material:1.13.0'
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
-    implementation 'com.marozzi.roundbutton:round-button:1.0.7'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.github.jtv7:RippleSwitch:1.0'
-    implementation 'gun0912.ted:tedpermission:2.2.3'
-    implementation 'com.google.android.gms:play-services-ads:21.5.0'
-    implementation 'com.androidsx:rate-me:4.0.3'
-    implementation 'com.jackandphantom.android:androidlikebutton:1.2.0'
-    implementation 'com.sdsmdg.tastytoast:tastytoast:0.1.1'
-    implementation 'com.github.AriesHoo:UIPopupMenu:1.0.0'
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
-    def multidex_version = "2.0.1"
-    implementation "androidx.multidex:multidex:$multidex_version"
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation('com.github.jtv7:RippleSwitch:1.0') {
+        // Its classes do not use the old support library (checked); AndroidX already provides it.
+        exclude group: 'com.android.support'
+    }
 
-    implementation platform('com.google.firebase:firebase-bom:31.2.2')
-    // Add the dependencies for the Crashlytics and Analytics libraries
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.android.gms:play-services-ads:25.5.0'
+    implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
+
+    implementation platform('com.google.firebase:firebase-bom:35.1.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
 }
