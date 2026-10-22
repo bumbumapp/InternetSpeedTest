@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.code.bumbumapps.netspeed">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
+        android:name=".NetSpeedApp"
+        android:enableOnBackInvokedCallback="false"
         android:allowBackup="true"
         android:icon="@mipmap/app_logo_foreground"
         android:label="@string/app_name"
-        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
         android:theme="@style/sflash">
@@ -24,7 +21,7 @@
         <activity
             android:name="com.code.bumbumapps.netspeed.History"
             android:label="History"
-            android:exported="true"
+            android:exported="false"
             tools:node="merge"
             android:theme="@style/sflashgreenex">
             <meta-data
@@ -32,7 +29,7 @@
                 android:value="com.code.bumbumapps.netspeed.History" />
         </activity>
         <activity
-            android:exported="true"
+            android:exported="false"
             tools:node="merge"
             android:name="com.code.bumbumapps.netspeed.MainActivity" />
         <activity

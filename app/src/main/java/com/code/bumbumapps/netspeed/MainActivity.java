@@ -30,29 +30,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-import com.aries.ui.widget.menu.MenuItemEntity;
-import com.aries.ui.widget.menu.UIPopupMenu;
 import com.code.bumbumapps.netspeed.CustomAdapter.MyDatabaseHelper;
 import com.code.bumbumapps.netspeed.Speed.DevilDownloadTest;
 import com.code.bumbumapps.netspeed.Speed.HttpUploadTest;
 import com.code.bumbumapps.netspeed.Speed.PingTest;
 import com.code.bumbumapps.netspeed.schreenshot.ScreenshotUtil;
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 import com.jtv7.rippleswitchlib.RippleSwitch;
-import com.sdsmdg.tastytoast.TastyToast;
 
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
@@ -84,20 +68,15 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
     private ImageView speedface;
     private Bitmap bitmap;
     private static final int APP_PERMISSION_REQUEST = 102;
-    private InterstitialAd mInterstitialAd;
     private DecimalFormat dec;
     private DecimalFormat decmbs;
     boolean doubleBackToExitPressedOnce = false;
     int timer = 0;
     ServersPreference serversPreference;
-    private UIPopupMenu uiPopupMenu;
-    List<MenuItemEntity> listMenus = new ArrayList<>();
-    private AdView mAdView;
     HashMap<Integer, List<String>> mapValue ;
     Handler handler=new Handler();
     Runnable runnable;
     int findServerIndex = 0;
-    AdRequest adRequest;
 
     Handler handlerd=new Handler();
     @Override
@@ -115,19 +94,12 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
 
         serversPreference=new ServersPreference(this);
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override
-            public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
+        /** UMP consent first; ads are initialised and requested only after canRequestAds(). */
+        final android.view.ViewGroup adContainer = findViewById(R.id.adView);
+        AdsHelper.gatherConsent(this, () -> {
+            AdsHelper.loadBanner(this, adContainer, getString(R.string.banner_id));
+            AdsHelper.preloadInterstitial(this, getString(R.string.interstial_id));
         });
-        /**setup banner ads*/
-        mAdView = findViewById(R.id.adView);
-        adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-        /**setup banner ads*/
-
-//
-      loadIntersitialAds();
 
 
         /**startButton*/
@@ -320,21 +292,6 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
 
             }
         });
-    }
-
-    private void loadIntersitialAds() {
-        InterstitialAd.load(this, getString(R.string.interstial_id), adRequest, new InterstitialAdLoadCallback() {
-            @Override
-            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                mInterstitialAd = interstitialAd;
-            }
-
-            @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                mInterstitialAd =null;
-            }
-        });
-
     }
 
     public void mainrun(){
@@ -707,32 +664,9 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
                             mhead.setText(R.string.app_name);
                         } catch (Exception O) {
                         }
-                        if (mInterstitialAd != null) {
-                            mInterstitialAd.show(MainActivity.this);
-                            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
-                                @Override
-                                public void onAdDismissedFullScreenContent() {
-                                   sharing();
-                                   loadIntersitialAds();
-                                }
-
-                                @Override
-                                public void onAdClicked() {
-                                    TastyToast.makeText(getApplicationContext(), "Executed when the ad is closed", TastyToast.LENGTH_LONG, TastyToast.INFO);
-
-                                }
-
-                                @Override
-                                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                                    loadIntersitialAds();
-                                }
-                            });
-                        } else {
-
-                            sharing();
-                        }
-
-
+                        // Natural break after a finished test: capped interstitial, then the result dialog.
+                        AdsHelper.showInterstitialIfReady(MainActivity.this, getString(R.string.interstial_id),
+                                () -> { if (!isFinishing() && !isDestroyed()) sharing(); });
 
                         /**
                          * add data base
@@ -873,42 +807,35 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
             @Override
             public void onClick(View v) {
 
-                try{
-                    reqastpermisson();
-                }catch (Exception IO){
-                    reqastpermisson();
-                }finally {
-
-                    share_part();
-
-
-                }
+                share_part();
 
             }
 
             public void share_part(){
+                // Shared through the app cache + FileProvider: no storage permission needed (scoped storage).
                 bitmap = ScreenshotUtil.getInstance().takeScreenshotForView(resultview);
-                String fileName = String.valueOf(System.currentTimeMillis()).replace(":", ".");
-                String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" +fileName+ "new2.png";
-                FileOutputStream fos;
-                try {
-                    fos = new FileOutputStream(mPath);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-//                    Toast.makeText(MainActivity.this, mPath, Toast.LENGTH_SHORT).show();
-                    fos.flush();
-                    fos.close();
-
-                    Log.e("ImageSave", "Saveimage");
-                } catch (FileNotFoundException e) {
-                    Log.e("GREC", e.getMessage(), e);
-                } catch (IOException e) {
-                    Log.e("GREC", e.getMessage(), e);
+                if (bitmap == null) {
+                    Toast.makeText(MainActivity.this, R.string.app_name, Toast.LENGTH_SHORT).show();
+                    return;
                 }
-
-                Uri bmpUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", new File(mPath));
+                File dir = new File(getCacheDir(), "shared");
+                File out = new File(dir, System.currentTimeMillis() + ".png");
+                try {
+                    if (!dir.isDirectory() && !dir.mkdirs()) {
+                        throw new IOException("Cannot create " + dir);
+                    }
+                    try (FileOutputStream fos = new FileOutputStream(out)) {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    }
+                } catch (IOException e) {
+                    Log.e("GREC", "Cannot save screenshot", e);
+                    return;
+                }
+                Uri bmpUri = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider", out);
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_STREAM, bmpUri);
-                intent.setType("image/*");
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setType("image/png");
                 startActivity(Intent.createChooser(intent, "Share Image:"));
                 alertDialog.dismiss();
             }
@@ -917,26 +844,6 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
         /**share button work*/
 
     }
-    public void reqastpermisson(){
-        /**get storage permisson*/
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-            TedPermission.with(this)
-                    .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                    .setPermissions(Manifest.permission.READ_MEDIA_IMAGES)
-                    .check();
-
-        }else{
-            TedPermission.with(this)
-                    .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                    .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .check();
-        }
-
-        /**get storage permisson*/
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -947,19 +854,6 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
         }
     }
 
-    PermissionListener permissionlistener = new PermissionListener() {
-        @Override
-        public void onPermissionGranted() {
-
-        }
-
-        @Override
-        public void onPermissionDenied(List<String> deniedPermissions) {
-            Toast.makeText(MainActivity.this, "These permissions are required to proceed. Please try again\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-            finish();
-        }
-    };
-
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
@@ -968,7 +862,7 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
         }
 
         this.doubleBackToExitPressedOnce = true;
-        TastyToast.makeText(getApplicationContext(), "Please click BACK again to exit", TastyToast.LENGTH_LONG, TastyToast.WARNING);
+        Toast.makeText(getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 
