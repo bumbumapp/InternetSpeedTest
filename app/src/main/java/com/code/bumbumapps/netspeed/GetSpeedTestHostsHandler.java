@@ -97,10 +97,11 @@ public class GetSpeedTestHostsHandler extends Thread {
                         uploadAddress = line.split("server url=\"")[1].split("\"")[0];
                         lat = line.split("lat=\"")[1].split("\"")[0];
                         lon = line.split("lon=\"")[1].split("\"")[0];
-                        name = line.split("name=\"")[1].split("\"")[0];
-                        country = line.split("country=\"")[1].split("\"")[0];
+                        name = unescapeXml(line.split("name=\"")[1].split("\"")[0]);
+                        country = unescapeXml(line.split("country=\"")[1].split("\"")[0]);
                         cc = line.split("cc=\"")[1].split("\"")[0];
-                        sponsor = line.split("sponsor=\"")[1].split("\"")[0];
+                        // XML attribute values: "H&amp;B Communications" must show as "H&B Communications".
+                        sponsor = unescapeXml(line.split("sponsor=\"")[1].split("\"")[0]);
                         host = line.split("host=\"")[1].split("\"")[0];
 
                         List<String> ls = Arrays.asList(lat, lon, name, country, cc, sponsor, host);
@@ -117,5 +118,14 @@ public class GetSpeedTestHostsHandler extends Thread {
         }
 
         finished = true;
+    }
+
+    /** Decodes the five predefined XML entities used in the server list attributes. */
+    static String unescapeXml(String v) {
+        if (v == null || v.indexOf('&') < 0) {
+            return v;
+        }
+        return v.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"")
+                .replace("&apos;", "'").replace("&#39;", "'").replace("&amp;", "&");
     }
 }
