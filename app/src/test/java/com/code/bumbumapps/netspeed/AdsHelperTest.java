@@ -13,7 +13,8 @@ public class AdsHelperTest {
 
     @Test
     public void interstitialCapAllowsAfterInterval() {
-        assertTrue(AdsHelper.isIntervalElapsed(1_000L, 61_000L, AdsHelper.INTERSTITIAL_MIN_INTERVAL_MS));
+        assertTrue(AdsHelper.isIntervalElapsed(1_000L, 601_000L, AdsHelper.INTERSTITIAL_MIN_INTERVAL_MS));
+        assertFalse(AdsHelper.isIntervalElapsed(1_000L, 300_000L, AdsHelper.INTERSTITIAL_MIN_INTERVAL_MS));
     }
 
     @Test

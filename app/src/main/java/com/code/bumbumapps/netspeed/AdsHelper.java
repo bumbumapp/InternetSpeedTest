@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public final class AdsHelper {
 
     /** Minimum time between two interstitials (and between app start and the first one). */
-    public static final long INTERSTITIAL_MIN_INTERVAL_MS = 60_000L;
+    public static final long INTERSTITIAL_MIN_INTERVAL_MS = 10 * 60_000L; // after a finished test; also the delay after app start
 
     private static final AtomicBoolean mobileAdsStarted = new AtomicBoolean(false);
     private static InterstitialAd interstitialAd;

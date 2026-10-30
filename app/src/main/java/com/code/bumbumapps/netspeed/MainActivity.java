@@ -157,7 +157,9 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
         /**set custom font typeface*/
 
         /** Custom type face install */
-        type = Typeface.createFromAsset(getAssets(), "fonts/roboto_regular.ttf");
+        // Bento type: Plus Jakarta Sans (bold for values and the title).
+        type = androidx.core.content.res.ResourcesCompat.getFont(this, R.font.jakarta_semibold);
+        Typeface heavy = androidx.core.content.res.ResourcesCompat.getFont(this, R.font.jakarta_extrabold);
         /** Custom type face install */
 
 //        fhost.setTypeface(type); /**Host name textview set type face*/
@@ -167,11 +169,11 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
         fupload.setTypeface(type); /** upload name textview set type face*/
 
         type_of_network.setTypeface(type);/**network type  textview  set type face*/
-        mhead.setTypeface(type);/**main head  textview  set type face*/
+        mhead.setTypeface(heavy);/**main head  textview  set type face*/
         mdatametartype.setTypeface(type); /**datametar type set type face*/
 
-        downloadTextView.setTypeface(type);/**download textView  set type face/**/
-        uploadTextView.setTypeface(type);/**upload textView  set type face/**/
+        downloadTextView.setTypeface(heavy);/**download textView  set type face/**/
+        uploadTextView.setTypeface(heavy);/**upload textView  set type face/**/
 
         hostname.setTypeface(type);/**host  set type face*/
         hostname.setPaintFlags(hostname.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -422,7 +424,7 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    pingTextView.setText(dec.format(pingTest.getAvgRtt()) + " ms");
+                                    pingTextView.setText(pingText(dec, pingTest.getAvgRtt()));
                                     try {
                                         mhead.setText("PING");
                                     } catch (Exception O) {
@@ -436,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                pingTextView.setText(dec.format(pingTest.getInstantRtt()) + " ms");
+                                pingTextView.setText(pingText(dec, pingTest.getInstantRtt()));
                                 try {
                                     mhead.setText("PING");
                                 } catch (Exception O) {
@@ -876,4 +878,12 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
 
 
 
+
+    /** Ping label; values outside 0..60 s (failed ping, unset timer) show a dash instead of garbage. */
+    static String pingText(java.text.DecimalFormat dec, double ms) {
+        if (Double.isNaN(ms) || ms <= 0 || ms > 60_000) {
+            return "— ms";
+        }
+        return dec.format(ms) + " ms";
+    }
 }
