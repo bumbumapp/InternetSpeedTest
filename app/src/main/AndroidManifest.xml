@@ -9,7 +9,7 @@
         android:name=".NetSpeedApp"
         android:enableOnBackInvokedCallback="false"
         android:allowBackup="true"
-        android:icon="@mipmap/app_logo_foreground"
+        android:icon="@mipmap/app_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
