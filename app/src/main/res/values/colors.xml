@@ -9,4 +9,5 @@
     <color name="headerTextColour">#EDEFF5</color>
     <color name="dark_blue">#180A70</color>
     <color name="white">#ffffff</color>
+    <color name="is_header">#181B25</color>
 </resources>

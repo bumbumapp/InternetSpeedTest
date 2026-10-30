@@ -15,7 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:background="@color/cone"
+            android:background="@color/is_header"
             android:layout_height="@dimen/_27sdp"
             android:orientation="horizontal">
             <TextView

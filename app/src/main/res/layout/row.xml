@@ -36,7 +36,7 @@
                 android:paddingLeft="7.0dip"
                 android:paddingTop="3.0dip"
                 android:text="@string/time"
-                android:textColor="@color/cone" />
+                android:textColor="@color/maintextcolor" />
 
             <TextView
                 android:id="@+id/m_type"
@@ -48,7 +48,7 @@
                 android:paddingBottom="3.0dip"
                 android:paddingTop="3.0dip"
                 android:text="@string/type"
-                android:textColor="@color/cone" />
+                android:textColor="@color/maintextcolor" />
 
             <TextView
                 android:id="@+id/m_ping"
@@ -61,7 +61,7 @@
                 android:paddingBottom="3.0dip"
                 android:paddingTop="3.0dip"
                 android:text="@string/ping"
-                android:textColor="@color/cone" />
+                android:textColor="@color/maintextcolor" />
 
             <TextView
                 android:id="@+id/m_download"
@@ -73,7 +73,7 @@
                 android:paddingBottom="3.0dip"
                 android:paddingTop="3.0dip"
                 android:text="@string/download"
-                android:textColor="@color/cone" />
+                android:textColor="@color/maintextcolor" />
 
             <TextView
                 android:id="@+id/m_upload"
@@ -86,7 +86,7 @@
                 android:paddingRight="2.0dip"
                 android:paddingTop="3.0dip"
                 android:text="@string/upload"
-                android:textColor="@color/cone" />
+                android:textColor="@color/maintextcolor" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

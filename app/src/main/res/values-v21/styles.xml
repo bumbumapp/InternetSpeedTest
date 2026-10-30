@@ -8,12 +8,12 @@
     </style>
 
     <style name="sflashgreenex" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/cone</item>
-        <item name="colorPrimaryDark">@color/cone</item>
+        <item name="colorPrimary">@color/is_header</item>
+        <item name="colorPrimaryDark">@color/is_header</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="colorAccent">@color/cone</item>
-        <item name="android:statusBarColor" tools:ignore="NewApi">@color/cone</item>
-        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/cone</item>
+        <item name="android:statusBarColor" tools:ignore="NewApi">@color/is_header</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/newbg</item>
     </style>
 
 </resources>
