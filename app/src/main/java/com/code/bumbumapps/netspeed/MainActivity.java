@@ -218,9 +218,15 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
             runnable=new Runnable() {
                 @Override
                 public void run() {
-                    mapValue = getSpeedTestHostsHandler.getMapValue();
+                    GetSpeedTestHostsHandler hosts = getSpeedTestHostsHandler;
+                    if (hosts != null && hosts.isFinished() && hosts.getMapValue().isEmpty()) {
+                        // Offline when the list was requested: ask again.
+                        getSpeedTestHostsHandler = new GetSpeedTestHostsHandler();
+                        getSpeedTestHostsHandler.start();
+                    }
+                    mapValue = hosts == null ? null : hosts.getMapValue();
                     if (mapValue!=null){
-                        if(mapValue.size()>=serversPreference.getIntValue()){
+                        if(mapValue.containsKey(serversPreference.getIntValue())){
                             startButton.setEnabled(true);
                             hostname.setEnabled(true);
                             hostname.setText(mapValue.get(serversPreference.getIntValue()).get(5));
@@ -239,43 +245,36 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
         }
 
         else{
-            HashMap<Integer, String> mapKey = getSpeedTestHostsHandler.getMapKey();
-
-            double selfLat = getSpeedTestHostsHandler.getSelfLat();
-            double selfLon = getSpeedTestHostsHandler.getSelfLon();
-            double tmp = 19349458;
-            double dist = 0.0;
-
-            for (int index : mapKey.keySet()) {
-
-
-                Location source = new Location("Source");
-                source.setLatitude(selfLat);
-                source.setLongitude(selfLon);
-
-                List<String> ls = mapValue.get(index);
-                Location dest = new Location("Dest");
-                dest.setLatitude(Double.parseDouble(ls.get(0)));
-                dest.setLongitude(Double.parseDouble(ls.get(1)));
-
-                double distance = source.distanceTo(dest);
-                if (tmp > distance) {
-                    tmp = distance;
-                    dist = distance;
-                    findServerIndex = index;
-                }
-            }
-
-            handlerd.postDelayed(new Runnable() {
+            // The host list is downloaded on a background thread. Picking the nearest server right
+            // away (and reading it 2 s later) crashed with an NPE whenever the list was not there yet.
+            handlerd.post(new Runnable() {
                 @Override
                 public void run() {
+                    if (isFinishing() || isDestroyed()) return;
+                    GetSpeedTestHostsHandler hosts = getSpeedTestHostsHandler;
+                    HashMap<Integer, List<String>> values = hosts == null ? null : hosts.getMapValue();
+                    if (hosts == null || !hosts.isFinished() || values == null || values.isEmpty()) {
+                        if (hosts != null && hosts.isFinished()) {
+                            // No servers (offline): try again with a fresh request.
+                            getSpeedTestHostsHandler = new GetSpeedTestHostsHandler();
+                            getSpeedTestHostsHandler.start();
+                        }
+                        handlerd.postDelayed(this, 1000);
+                        return;
+                    }
+                    findServerIndex = nearestServer(values, hosts.getSelfLat(), hosts.getSelfLon());
+                    List<String> server = values.get(findServerIndex);
+                    if (server == null) {
+                        handlerd.postDelayed(this, 1000);
+                        return;
+                    }
+                    mapValue = values;
                     startButton.setEnabled(true);
                     hostname.setEnabled(true);
-                    mapValue=getSpeedTestHostsHandler.getMapValue();
-                    hostname.setText(mapValue.get(findServerIndex).get(5));
-                    locationname.setText(mapValue.get(findServerIndex).get(3));
+                    hostname.setText(server.get(5));
+                    locationname.setText(server.get(3));
                 }
-            },2000);
+            });
         }
 
 
@@ -294,6 +293,30 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
 
             }
         });
+    }
+
+    static int nearestServer(HashMap<Integer, List<String>> servers, double selfLat, double selfLon) {
+        int best = -1;
+        double bestDist = Double.MAX_VALUE;
+        for (Integer index : servers.keySet()) {
+            List<String> ls = servers.get(index);
+            if (ls == null || ls.size() < 6) continue;
+            try {
+                double lat = Double.parseDouble(ls.get(0));
+                double lon = Double.parseDouble(ls.get(1));
+                // Haversine (central angle), same ordering as Location.distanceTo
+                double dLat = Math.toRadians(lat - selfLat), dLon = Math.toRadians(lon - selfLon);
+                double h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(selfLat))
+                        * Math.cos(Math.toRadians(lat)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                double d = 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+                if (d < bestDist) {
+                    bestDist = d;
+                    best = index;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+        }
+        return best;
     }
 
     public void mainrun(){
