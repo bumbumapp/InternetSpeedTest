@@ -27,6 +27,22 @@
             android:textSize="@dimen/_8sdp"></TextView>
 
 
+        <TextView
+            android:id="@+id/toolsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginRight="@dimen/_36sdp"
+            android:background="@drawable/rounder_text_backgrund"
+            android:fontFamily="@font/jakarta_bold"
+            android:gravity="center"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="@string/tools_title"
+            android:textColor="@color/cone"
+            android:textSize="@dimen/_10sdp" />
+
         <Button
             android:id="@+id/thisapprating"
             android:layout_width="@dimen/_20sdp"

@@ -113,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
             }
         });
 
+        findViewById(R.id.toolsButton).setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, com.code.bumbumapps.netspeed.tools.ToolsActivity.class)));
+
         /**speed view image*/
         speedface = findViewById(R.id.imageView);
         /**speed view image*/

@@ -21,4 +21,31 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="ToolCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">18dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:background">@drawable/is_card</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="ToolCardTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/jakarta_bold</item>
+        <item name="android:textColor">@color/cone</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ToolCardText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:textColor">@color/subtext</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

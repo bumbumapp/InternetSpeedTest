@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/newbg"
+    android:orientation="vertical">
+
+    <include layout="@layout/tool_header" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:id="@+id/card_network"
+                style="@style/ToolCard">
+                <TextView style="@style/ToolCardTitle" android:text="@string/tool_network_title" />
+                <TextView style="@style/ToolCardText" android:text="@string/tool_network_desc" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/card_latency"
+                style="@style/ToolCard">
+                <TextView style="@style/ToolCardTitle" android:text="@string/tool_latency_title" />
+                <TextView style="@style/ToolCardText" android:text="@string/tool_latency_desc" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/card_stats"
+                style="@style/ToolCard">
+                <TextView style="@style/ToolCardTitle" android:text="@string/tool_stats_title" />
+                <TextView style="@style/ToolCardText" android:text="@string/tool_stats_desc" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
