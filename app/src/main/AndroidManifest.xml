@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Wi-Fi Analyzer only: start a scan and read nearby networks (location is asked inside that tool). -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Data Usage only: special access granted by the user in system settings, asked inside that tool. -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".NetSpeedApp"
@@ -44,7 +49,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".tools.ToolsActivity" android:exported="false" android:theme="@style/sflash" />
+        <activity android:name=".HomeActivity" android:exported="false" android:theme="@style/sflash" />
+        <activity android:name=".tools.WifiAnalyzerActivity" android:exported="false" android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden" android:theme="@style/sflash" />
+        <activity android:name=".tools.LanScannerActivity" android:exported="false" android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden" android:theme="@style/sflash" />
+        <activity android:name=".tools.NetToolboxActivity" android:exported="false" android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden" android:theme="@style/sflash"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".tools.DataUsageActivity" android:exported="false" android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden" android:theme="@style/sflash" />
         <activity android:name=".tools.NetworkDetailsActivity" android:exported="false" android:theme="@style/sflash" />
         <activity android:name=".tools.LatencyMonitorActivity" android:exported="false" android:theme="@style/sflash" />
         <activity android:name=".tools.HistoryStatsActivity" android:exported="false" android:theme="@style/sflash" />

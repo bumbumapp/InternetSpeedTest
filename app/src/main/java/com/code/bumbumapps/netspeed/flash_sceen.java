@@ -39,7 +39,7 @@ public class flash_sceen extends AppCompatActivity {
                 timer++;
 
                 if(timer==2){
-                    Intent next = new Intent(flash_sceen.this,MainActivity.class);
+                    Intent next = new Intent(flash_sceen.this,HomeActivity.class);
                     flash_sceen.this.startActivity(next);
                     flash_sceen.this.finish();
 

@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
             }
         });
 
-        findViewById(R.id.toolsButton).setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, com.code.bumbumapps.netspeed.tools.ToolsActivity.class)));
+        // The tools live on the toolkit home screen this activity was opened from.
+        findViewById(R.id.toolsButton).setOnClickListener(v -> finish());
 
         /**speed view image*/
         speedface = findViewById(R.id.imageView);
@@ -884,26 +884,9 @@ public class MainActivity extends AppCompatActivity implements RippleSwitch.OnCh
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(getApplicationContext(), "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
-
+        // Back returns to the toolkit home screen.
+        super.onBackPressed();
     }
-
-
-
 
     /** Ping label; values outside 0..60 s (failed ping, unset timer) show a dash instead of garbage. */
     static String pingText(java.text.DecimalFormat dec, double ms) {

@@ -84,6 +84,8 @@ public class PingTest extends Thread {
             ProcessBuilder ps = new ProcessBuilder("ping", "-c", String.valueOf(count), "-W", "2", this.server);
             ps.redirectErrorStream(true);
             pr = ps.start();
+            // Some networks/emulators never answer and never let ping exit: stop it after count * 2 s + 5 s.
+            com.code.bumbumapps.netspeed.tools.NetInput.killAfter(pr, Math.max(1, count) * 2000L + 5000L);
 
             BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             String line;
